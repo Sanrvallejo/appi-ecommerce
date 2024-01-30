@@ -1,11 +1,17 @@
 package com.api.ecommerce.entities;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter @Getter
+import java.util.List;
 
+@Setter @Getter
+@Entity()
+@Table(name = "users")
 public class User {
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
   private String id;
   private String name;
   private String lastname;
@@ -14,6 +20,12 @@ public class User {
   private String address;
   private String tipo;
   private String password;
+
+  @OneToMany(mappedBy = "user")
+  private List<Product> products;
+
+  @OneToMany(mappedBy = "user")
+  private List<Order> orders;
 
   public User() {
   }

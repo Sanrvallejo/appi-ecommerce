@@ -1,15 +1,26 @@
 package com.api.ecommerce.entities;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter @Getter
+@Entity()
+@Table(name = "orders_details")
 public class OrderDetails {
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
   private String id;
   private String name;
   private double price;
   private double quantity;
   private double total;
+
+  @OneToOne()
+  private Order order;
+
+  @OneToOne()
+  private Product product;
 
   public OrderDetails() {
   }
