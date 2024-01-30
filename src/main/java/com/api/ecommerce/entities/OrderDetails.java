@@ -19,7 +19,7 @@ public class OrderDetails {
   @OneToOne()
   private Order order;
 
-  @OneToOne()
+  @ManyToOne()
   private Product product;
 
   public OrderDetails() {
