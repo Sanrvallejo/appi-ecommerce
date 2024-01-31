@@ -8,7 +8,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Spring eCommerce</title>
+  <title>Dommi eCommerce</title>
 
 
   <!-- Bootstrap core CSS -->
@@ -22,15 +22,15 @@
 <body>
 
   <!-- Navigation -->
-  <div th:include="admin/template_admin.html::header"></div>
+  <div th:insert="admin/template_admin.html::header"></div>
 
     <!-- Page Content -->
     <div class="container">
 
       <!-- Jumbotron Header -->
       <header class="jumbotron my-4">
-        <h1 class="display-3">Bienvenido a Spring Ecommerce 2021</h1>
-        <p class="lead">Tu tienda de productos en Línea</p>
+        <h1 class="display-3">Welcome to Dommi Ecommerce 2021</h1>
+        <p class="lead">Your online store</p>
       </header>
 
       <!-- Page Features -->
@@ -40,10 +40,10 @@
           <div class="card h-100">
             <img class="card-img-top" src="http://placehold.it/500x325" alt="">
             <div class="card-body">
-              <p class="card-text">Nombre del producto.</p>
+              <p class="card-text">Product name.</p>
             </div>
             <div class="card-footer">
-              <a href="productohome.html" class="btn btn-success">Ver producto</a>
+              <a href="productohome.html" class="btn btn-success">See product</a>
             </div>
           </div>
         </div>
@@ -52,10 +52,10 @@
           <div class="card h-100">
             <img class="card-img-top" src="http://placehold.it/500x325" alt="">
             <div class="card-body">
-              <p class="card-text">Nombre del producto.</p>
+              <p class="card-text">Product name.</p>
             </div>
             <div class="card-footer">
-              <a href="#" class="btn btn-success">Ver producto</a>
+              <a href="#" class="btn btn-success">See product</a>
             </div>
           </div>
         </div>
@@ -64,10 +64,10 @@
           <div class="card h-100">
             <img class="card-img-top" src="http://placehold.it/500x325" alt="">
             <div class="card-body">
-              <p class="card-text">Nombre del producto.</p>
+              <p class="card-text">Product name.</p>
             </div>
             <div class="card-footer">
-              <a href="#" class="btn btn-success">Ver producto</a>
+              <a href="#" class="btn btn-success">See product</a>
             </div>
           </div>
         </div>
@@ -75,10 +75,10 @@
           <div class="card h-100">
             <img class="card-img-top" src="http://placehold.it/500x325" alt="">
             <div class="card-body">
-              <p class="card-text">Nombre del producto.</p>
+              <p class="card-text">Product name.</p>
             </div>
             <div class="card-footer">
-              <a href="#" class="btn btn-success">Ver producto</a>
+              <a href="#" class="btn btn-success">See product</a>
             </div>
           </div>
         </div>
@@ -90,7 +90,7 @@
     <!-- /.container -->
 
     <!-- Footer -->
-    <div th:include="admin/template_admin.html::footer"></div>
+    <div th:insert="admin/template_admin.html::footer"></div>
 
     <!-- Bootstrap core JavaScript -->
     <script th:src="@{vendor/jquery/jquery.min.js}"></script>
