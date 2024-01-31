@@ -1,17 +1,17 @@
 package com.api.ecommerce.entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.Date;
 
-@Setter @Getter
+@Data
 @Entity()
 @Table(name = "orders")
 public class Order {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
+  @Column(columnDefinition = "BINARY(16)")
   private String id;
   private Date createdAt;
   private Date receivedAt;

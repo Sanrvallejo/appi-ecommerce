@@ -1,17 +1,18 @@
 package com.api.ecommerce.entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.List;
+import java.util.UUID;
 
-@Setter @Getter
+@Data
 @Entity()
 @Table(name = "users")
 public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
+  @Column(columnDefinition = "BINARY(16)")
   private String id;
   private String name;
   private String lastname;
@@ -30,7 +31,8 @@ public class User {
   public User() {
   }
 
-  public User(String id, String name, String lastname, String email, String phone, String address, String tipo, String password) {
+  public User(String id, String name, String lastname, String email, String phone, String address, String tipo,
+              String password) {
     this.id = id;
     this.name = name;
     this.lastname = lastname;
