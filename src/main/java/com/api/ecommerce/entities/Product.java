@@ -6,7 +6,6 @@ import lombok.*;
 import java.util.UUID;
 
 @Data
-@ToString
 @Entity()
 @Table(name = "products")
 public class Product {
@@ -34,5 +33,17 @@ public class Product {
     this.image = image;
     this.price = price;
     this.quantity = quantity;
+  }
+
+  @Override
+  public String toString() {
+    return "Product{" +
+            "id='" + id + '\'' +
+            ", name='" + name + '\'' +
+            ", description='" + description + '\'' +
+            ", image='" + image + '\'' +
+            ", price=" + price +
+            ", quantity=" + quantity +
+            '}';
   }
 }

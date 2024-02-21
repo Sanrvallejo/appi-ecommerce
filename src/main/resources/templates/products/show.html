@@ -52,12 +52,12 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td ></td>
-        <td ></td>
-        <td ></td>
-        <td ></td>
-        <td><a  class="btn btn-warning" href="">Edit</a> </td>
+      <tr th:each="product:${products}">
+        <td th:text="${product.name}"></td>
+        <td th:text="${product.description}"></td>
+        <td th:text="${product.quantity}"></td>
+        <td th:text="${product.price}"></td>
+        <td><a  class="btn btn-warning" th:href="@{products/edit/{id} (id = ${product.id})}">Edit</a> </td>
         <td><a  class="btn btn-danger" href="">Remove</a> </td>
       </tr>       
     </tbody>
