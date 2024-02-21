@@ -3,6 +3,7 @@ package com.api.ecommerce.controller;
 import com.api.ecommerce.entities.Product;
 import com.api.ecommerce.entities.User;
 import com.api.ecommerce.services.ProductServiceImpl;
+import com.api.ecommerce.services.UploadFileService;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,7 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @Controller
@@ -22,6 +25,9 @@ public class ProductController {
 
   @Autowired
   private ProductServiceImpl productService;
+
+  @Autowired
+  private UploadFileService uploadFileService;
 
   @GetMapping("")
   public String show(Model model) {
@@ -35,10 +41,26 @@ public class ProductController {
   }
 
   @PostMapping("/save-products")
-  public String saveProduct (Product product){
+  public String saveProduct (Product product, MultipartFile file) throws IOException {
     LOGGER.info("Product: {}", product);
     User user = new User("550e8400-e29b-41d4-a716-446655440000", "", "", "", "", "", "", "");
     product.setUser(user);
+
+    //set image
+    if (product.getId() ==  null){ //when product is created (new product)
+      String imageName = uploadFileService.saveImage(file);
+      product.setImage(imageName);
+    }else {
+      if (file.isEmpty()){ //when editing a product without an image
+        Product p = new Product();
+        p = productService.getProductById(product.getId()).get();
+        product.setImage(p.getImage());
+      }else { // when editing a product with an image
+        String imageName = uploadFileService.saveImage(file);
+        product.setImage(imageName);
+      }
+    }
+
     productService.save(product);
     return "redirect:/products";
   }
