@@ -8,10 +8,7 @@ import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -41,24 +38,15 @@ public class ProductController {
   }
 
   @PostMapping("/save-products")
-  public String saveProduct (Product product, MultipartFile file) throws IOException {
+  public String saveProduct (Product product, @RequestParam("img") MultipartFile file) throws IOException {
     LOGGER.info("Product: {}", product);
     User user = new User("550e8400-e29b-41d4-a716-446655440000", "", "", "", "", "", "", "");
     product.setUser(user);
 
     //set image
-    if (product.getId() ==  null){ //when product is created (new product)
+    if (product.getId() ==  null && !file.isEmpty()){ //when product is created (new product)
       String imageName = uploadFileService.saveImage(file);
       product.setImage(imageName);
-    }else {
-      if (file.isEmpty()){ //when editing a product without an image
-        Product p = new Product();
-        p = productService.getProductById(product.getId()).get();
-        product.setImage(p.getImage());
-      }else { // when editing a product with an image
-        String imageName = uploadFileService.saveImage(file);
-        product.setImage(imageName);
-      }
     }
 
     productService.save(product);
@@ -76,13 +64,38 @@ public class ProductController {
   }
 
   @PostMapping("/update-product")
-  public String updateProduct(Product product){
+  public String updateProduct(Product product, @RequestParam("img") MultipartFile file) throws IOException{
+    if (file.isEmpty()){ //when editing a product without an image
+      Product p = new Product();
+      p = productService.getProductById(product.getId()).get();
+      product.setImage(p.getImage());
+    }else { // when editing a product with an image
+      Product p2 = new Product();
+      p2 = productService.getProductById(product.getId()).get();
+
+      //when the image is not the default image
+      if (!p2.getImage().equals("default.jpg")){
+        uploadFileService.deleteImage(p2.getImage());
+      }
+
+      String imageName = uploadFileService.saveImage(file);
+      product.setImage(imageName);
+    }
     productService.update(product);
     return "redirect:/products";
   }
 
   @GetMapping("/delete/{id}")
   public String delete(@PathVariable String id){
+
+    Product productToElminate = new Product();
+    productToElminate = productService.getProductById(id).get();
+
+    //when the image is not the default image
+    if (!productToElminate.getImage().equals("default.jpg")){
+      uploadFileService.deleteImage(productToElminate.getImage());
+    }
+
     productService.delete(id);
     return "redirect:/products";
   }
