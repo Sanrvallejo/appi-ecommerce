@@ -1,5 +1,6 @@
 package com.api.ecommerce.controller;
 
+import com.api.ecommerce.entities.Product;
 import com.api.ecommerce.services.ProductServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/")
@@ -26,8 +29,14 @@ public class HomeController {
   }
 
   @GetMapping("product-details/{id}")
-  public String productDetails(@PathVariable String id) { //product_home view
+  public String productDetails(@PathVariable String id, Model model) { //product_home view
     LOGGER.info("Product ID {}", id);
+    Product product = new Product();
+    Optional<Product> productOptional = productService.getProductById(id);
+
+    product = productOptional.get();
+
+    model.addAttribute("product", product);
     return "user/product_home";
   }
 }
