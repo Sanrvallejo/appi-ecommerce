@@ -1,5 +1,7 @@
 package com.api.ecommerce.controller;
 
+import com.api.ecommerce.entities.Order;
+import com.api.ecommerce.entities.OrderDetails;
 import com.api.ecommerce.entities.Product;
 import com.api.ecommerce.services.ProductServiceImpl;
 import org.slf4j.Logger;
@@ -7,11 +9,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -20,6 +21,9 @@ public class HomeController {
 
   @Autowired
   private ProductServiceImpl productService;
+
+  List<OrderDetails> details = new ArrayList<OrderDetails>();
+  Order order = new Order();
 
   private final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
 
@@ -42,7 +46,15 @@ public class HomeController {
   }
 
   @PostMapping("/cart")
-  public String addCart() {
+  public String addCart(@RequestParam String id, @RequestParam double quantity) {
+    Product product = new Product();
+    OrderDetails orderDetails = new OrderDetails();
+    double total = 0;
+
+    Optional<Product> optionalProduct = productService.getProductById(id);
+
+    LOGGER.info("Product {}", optionalProduct);
+    LOGGER.info("Quantity {}", quantity);
     return "user/cart";
   }
 }
