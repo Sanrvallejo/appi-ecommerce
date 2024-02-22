@@ -17,6 +17,7 @@ public class Order {
   private Date receivedAt;
   private Date updatedAt;
   private String number;
+  private double total;
 
   @ManyToOne()
   private User user;
