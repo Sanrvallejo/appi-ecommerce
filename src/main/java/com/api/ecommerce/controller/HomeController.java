@@ -3,7 +3,9 @@ package com.api.ecommerce.controller;
 import com.api.ecommerce.entities.Order;
 import com.api.ecommerce.entities.OrderDetails;
 import com.api.ecommerce.entities.Product;
+import com.api.ecommerce.entities.User;
 import com.api.ecommerce.services.ProductServiceImpl;
+import com.api.ecommerce.services.UserServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ public class HomeController {
 
   @Autowired
   private ProductServiceImpl productService;
+
+  @Autowired
+  private UserServiceImpl userService;
 
   List<OrderDetails> details = new ArrayList<OrderDetails>();
   Order order = new Order();
@@ -114,6 +119,17 @@ public class HomeController {
     model.addAttribute("cart", details);
     model.addAttribute("order", order);
     return "user/cart";
+  }
+
+  @GetMapping("/order")
+  public String getOrder(Model model) {
+
+    User user = userService.getUserById("550e8400-e29b-41d4-a716-446655440000").get();
+    model.addAttribute("cart", details);
+    model.addAttribute("order", order);
+    model.addAttribute("user", user);
+
+    return "user/summary_order";
   }
 
 }
