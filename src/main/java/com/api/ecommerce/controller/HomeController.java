@@ -52,15 +52,23 @@ public class HomeController {
     double total = 0;
 
     Optional<Product> optionalProduct = productService.getProductById(id);
-
     product = optionalProduct.get();
-    orderDetails.setQuantity(quantity);
-    orderDetails.setPrice(product.getPrice());
+
     orderDetails.setName(product.getName());
+    orderDetails.setPrice(product.getPrice());
+    orderDetails.setQuantity(quantity);
     orderDetails.setTotal(product.getPrice()*quantity);
     orderDetails.setProduct(product);
 
-    details.add(orderDetails);
+    //validate that the same product is not added twice
+    String idProduct = product.getId();
+    boolean productFound = details.stream().anyMatch(p -> p.getProduct().getId().equals(idProduct));
+    LOGGER.info("Product {}", idProduct);
+    LOGGER.info("Product Found {}", productFound);
+
+    if (!productFound) {
+      details.add(orderDetails);
+    }
 
     total = details.stream().mapToDouble(dt -> dt.getTotal()).sum();
 
@@ -73,4 +81,39 @@ public class HomeController {
     LOGGER.info("Quantity {}", quantity);
     return "user/cart";
   }
+
+  //remove product from cart
+  @GetMapping("/delete/cart/{id}")
+  public String removeProduct(@PathVariable String id, Model model) {
+    List<OrderDetails> newOrder = new ArrayList<OrderDetails>();
+    double total = 0;
+
+    //create a new list of products to recalculate values
+    for (OrderDetails dOrder : details) {
+      if (!dOrder.getProduct().getId().equals(id)) {
+        newOrder.add(dOrder);
+      }
+    }
+
+    details = newOrder;
+
+    //recalculate values
+    total = details.stream().mapToDouble(dt -> dt.getTotal()).sum();
+
+    order.setTotal(total);
+
+    model.addAttribute("cart", details);
+    model.addAttribute("order", order);
+
+    return "user/cart";
+  }
+
+  @GetMapping("/get-cart")
+  public String getCart(Model model) {
+
+    model.addAttribute("cart", details);
+    model.addAttribute("order", order);
+    return "user/cart";
+  }
+
 }
