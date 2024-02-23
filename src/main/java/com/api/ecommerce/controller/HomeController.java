@@ -52,15 +52,23 @@ public class HomeController {
     double total = 0;
 
     Optional<Product> optionalProduct = productService.getProductById(id);
-
     product = optionalProduct.get();
-    orderDetails.setQuantity(quantity);
-    orderDetails.setPrice(product.getPrice());
+
     orderDetails.setName(product.getName());
+    orderDetails.setPrice(product.getPrice());
+    orderDetails.setQuantity(quantity);
     orderDetails.setTotal(product.getPrice()*quantity);
     orderDetails.setProduct(product);
 
-    details.add(orderDetails);
+    //validate that the same product is not added twice
+    String idProduct = product.getId();
+    boolean productFound = details.stream().anyMatch(p -> p.getProduct().getId().equals(idProduct));
+    LOGGER.info("Product {}", idProduct);
+    LOGGER.info("Product Found {}", productFound);
+
+    if (!productFound) {
+      details.add(orderDetails);
+    }
 
     total = details.stream().mapToDouble(dt -> dt.getTotal()).sum();
 
@@ -97,6 +105,14 @@ public class HomeController {
     model.addAttribute("cart", details);
     model.addAttribute("order", order);
 
+    return "user/cart";
+  }
+
+  @GetMapping("/get-cart")
+  public String getCart(Model model) {
+
+    model.addAttribute("cart", details);
+    model.addAttribute("order", order);
     return "user/cart";
   }
 
