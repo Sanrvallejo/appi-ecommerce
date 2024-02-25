@@ -36,7 +36,7 @@ public class OrderServiceImpl implements IOrderService {
     if (orders.isEmpty()) {
       number = 1;
     }else {
-      numbers.stream().max(Integer::compare).get();
+      number = numbers.stream().max(Integer::compare).get();
       number++;
     }
 
