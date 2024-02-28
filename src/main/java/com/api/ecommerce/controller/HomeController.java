@@ -15,10 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/")
@@ -166,6 +164,15 @@ public class HomeController {
     details.clear();
 
     return "redirect:/";
+  }
+
+  @PostMapping("/search-product")
+  public String searchProduct(@RequestParam String productName, Model model) {
+    LOGGER.info(productName);
+    List<Product> products =
+            productService.getAllProducts().stream().filter(p -> p.getName().toLowerCase(Locale.ROOT).contains(productName)).collect(Collectors.toList());
+    model.addAttribute("products", products);
+    return "user/home";
   }
 
 }
