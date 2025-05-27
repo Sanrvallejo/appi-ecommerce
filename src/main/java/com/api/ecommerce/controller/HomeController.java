@@ -4,6 +4,8 @@ import com.api.ecommerce.entities.Order;
 import com.api.ecommerce.entities.OrderDetails;
 import com.api.ecommerce.entities.Product;
 import com.api.ecommerce.entities.User;
+import com.api.ecommerce.services.OrderDetailsServiceImpl;
+import com.api.ecommerce.services.OrderServiceImpl;
 import com.api.ecommerce.services.ProductServiceImpl;
 import com.api.ecommerce.services.UserServiceImpl;
 import org.slf4j.Logger;
@@ -13,9 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/")
@@ -26,6 +27,12 @@ public class HomeController {
 
   @Autowired
   private UserServiceImpl userService;
+
+  @Autowired
+  private OrderServiceImpl orderService;
+
+  @Autowired
+  private OrderDetailsServiceImpl orderDetailsService;
 
   List<OrderDetails> details = new ArrayList<OrderDetails>();
   Order order = new Order();
@@ -130,6 +137,42 @@ public class HomeController {
     model.addAttribute("user", user);
 
     return "user/summary_order";
+  }
+
+  //save order and details order
+  @GetMapping("/save-order")
+  public String saveOrder() {
+    Date orderDate = new Date();
+
+    order.setCreatedAt(orderDate);
+    order.setNumber(orderService.generateOrderNumber());
+
+    //User
+    User user = userService.getUserById("550e8400-e29b-41d4-a716-446655440000").get();
+    order.setUser(user);
+
+    orderService.save(order);
+
+    //saveDetails
+    for (OrderDetails dt: details){
+      dt.setOrder(order);
+      orderDetailsService.save(dt);
+    }
+
+    //clean orders
+    order = new Order();
+    details.clear();
+
+    return "redirect:/";
+  }
+
+  @PostMapping("/search-product")
+  public String searchProduct(@RequestParam String productName, Model model) {
+    LOGGER.info(productName);
+    List<Product> products =
+            productService.getAllProducts().stream().filter(p -> p.getName().toLowerCase(Locale.ROOT).contains(productName)).collect(Collectors.toList());
+    model.addAttribute("products", products);
+    return "user/home";
   }
 
 }
