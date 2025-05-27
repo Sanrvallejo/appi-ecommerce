@@ -27,10 +27,10 @@ Por el momento, la aplicación sigue en construcción.
 
 Edita el archivo application.properties
 
-  spring.datasource.url=jdbc:mysql://localhost:3306/tu_base
-  spring.datasource.username=usuario
-  spring.datasource.password=contraseña
-  spring.jpa.hibernate.ddl-auto=update
+- spring.datasource.url=jdbc:mysql://localhost:3306/tu_base
+- spring.datasource.username=usuario
+- spring.datasource.password=contraseña
+- spring.jpa.hibernate.ddl-auto=update
 
 👨‍💻 Autor
 
